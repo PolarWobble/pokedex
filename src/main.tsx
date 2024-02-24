@@ -1,0 +1,17 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from 'react-router-dom';
+
+import App from "./App.tsx";
+import { PokemonProvider } from "./contexts/pokemon.context.jsx";
+import Pokemon from "./pages/Pokemon/Pokemon.tsx";
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <BrowserRouter>
+    <React.StrictMode>
+      <PokemonProvider>
+        <App />
+      </PokemonProvider>
+    </React.StrictMode>
+  </BrowserRouter>
+);
