@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {Outlet, Link} from 'react-router-dom';
 
 import Pokemon from '../Pokemon/Pokemon';
+import './Home.styles.scss';
 
 export type TPkmn = {
   name: string,
@@ -36,17 +37,11 @@ const Home = () => {
     fetchCall();
   },[])
 
-  function useViewportSize(): {
-    height: number;
-    width: number;
-  };
-
-  const {height, width} = useViewportSize();
 
   return (
-    <Center maw={width} h={height} className='Main-Background'>
-      <Button component={Link} to='/pokemon'>To All Pokemon</Button>
-    </Center>
+    <div className='Main-Background Home-Background'>
+      <Button size="xl" color="rgba(42, 117, 187, 1)" component={Link} to='/pokemon'>To All Pokemon</Button>
+    </div>
   )
 }
 
