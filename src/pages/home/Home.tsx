@@ -44,7 +44,7 @@ const Home = () => {
   const {height, width} = useViewportSize();
 
   return (
-    <Center maw={width} h={height}>
+    <Center maw={width} h={height} className='Main-Background'>
       <Button component={Link} to='/pokemon'>To All Pokemon</Button>
     </Center>
   )

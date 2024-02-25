@@ -1,9 +1,11 @@
 import React, { useState, createContext, useEffect } from "react";
 
 export type TPokemonContext = {
-    pokemonList: 
-            TPokemonListItem[];
-            setPokemonList: (pokemonList: TPokemonListItem[]) => void;
+    pokemonList: TPokemonListItem[];
+    setPokemonList: (pokemonList: TPokemonListItem[]) => void;
+    filteredPokemonList: TPokemonListItem[];
+    setFilteredPokemonList: (pokemonList: TPokemonListItem[]) => void;
+
 }
 
 export type TPokemonListItem = {
@@ -19,6 +21,7 @@ type TPokemonProvider = {
 
 export const PokemonProvider = ({children}:TPokemonProvider) => {
     const [pokemonList, setPokemonList] = useState<TPokemonListItem[]>([]);
+    const [filteredPokemonList, setFilteredPokemonList] = useState<TPokemonListItem[]>([]);
 
     useEffect(
         () =>{
@@ -31,7 +34,7 @@ export const PokemonProvider = ({children}:TPokemonProvider) => {
         fetchCall();
     },[]);
 
-    const value = {pokemonList, setPokemonList};
+    const value = {pokemonList, setPokemonList, filteredPokemonList, setFilteredPokemonList};
 
     return(
         <PokemonContext.Provider value={value}>{children}</PokemonContext.Provider>

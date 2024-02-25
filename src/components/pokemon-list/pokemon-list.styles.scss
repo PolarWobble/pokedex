@@ -1,0 +1,34 @@
+.BlackBorder {
+    border: 2px solid rgb(34, 34, 34);
+}
+
+.Dex-Container{
+    border: 2px solid rgb(34, 34, 34);
+    padding-top: 20px;
+    
+}
+
+.Dex-Input{
+    background: black;
+    
+}
+
+.MainBG{
+    background-color: #FAF9F6;
+    
+    
+}
+
+.BlueButton{
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    background-color: rgb(42, 117, 187);
+    background-size: cover;
+    justify-content: end;
+
+    &:hover{
+        background-color: rgb(98, 145, 189);
+        cursor: pointer;
+    }
+}

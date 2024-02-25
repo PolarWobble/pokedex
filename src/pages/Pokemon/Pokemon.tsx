@@ -3,6 +3,7 @@ import {Routes, Route} from 'react-router-dom';
 import {Outlet, Link} from 'react-router-dom';
 import { Button, Text, Loader, Grid, Space, Container, GridCol, TextInput } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
+import classes from './Pokemon.module.css';
 
 import Individual from '../Individual/Individual.js';
 
@@ -22,28 +23,17 @@ export type TIndividualPokemon = {
 //const Pokemon = ({pokemoninfo}:{pokemoninfo: undefined|string}) =>
 const Pokemon = () => {
     const {pokemonList} = useContext(PokemonContext) as TPokemonContext;
+    const {filteredPokemonList, setFilteredPokemonList} = useContext(PokemonContext) as TPokemonContext;
 
-    const [individualPokemon, setIndividualPokemon] = useState<undefined|TIndividualPokemon>(undefined);
+    
     const [stringValue, setStringValue] = useInputState('');
-    //const [filteredPokemonList, setFilteredPokemonList] = useState<TPokemonListItem>(pokemonList?);
-    //const filteredPokemonList = useContext(PokemonContext) as TPokemonContext;
-    const [filteredPokemonList, setFilteredPokemonList] = useState<undefined|TPokemonListItem[]>(pokemonList);
-
-    const id = 3;
-
-    useEffect(() =>{
-    const fetchCall = async () => {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-      const pokemon = await response.json();
-      console.log(pokemon);
-      setIndividualPokemon(pokemon);
-      console.log(pokemonList);
-    }
-    fetchCall();
-  },[])
+    //const [filteredPokemonList, setFilteredPokemonList] = useState<undefined|TPokemonListItem[]>(pokemonList);
 
 
     
+
+
+  // setFilteredPokemonList(pokemon.results.map((pokemon, i) => ({name: pokemon.name, id: i+1})));
 
     useEffect(() => {
       const newFilteredPokemons = pokemonList.filter((pokemon) => {
@@ -53,32 +43,20 @@ const Pokemon = () => {
     }, [pokemonList, stringValue]
     );
 
-
-    console.log(pokemonList, 'HERE IN /POKEMON');
-
-    if(!individualPokemon) {
-        return <Loader />;
-    }
+    
     //<Text>{individualPokemon?.abilities[0]?.ability.name}</Text>
     return (
-      <>
-        <Container size='lg'>
-          <Container p='20'>
-            <TextInput placeholder='Search Pokémon by name' value={stringValue} onChange={setStringValue} />
+      <div className='Main-Background'>
+        <Container size='lg' bg='red' className='Dex-Container'>
+          <Container p='1em' pb='1em' className='MainBG BlackBorder'>
+            <TextInput classNames={{ input: classes.textInput }} placeholder='Search Pokémon by name' value={stringValue} onChange={setStringValue} />
           </Container>
-          {filteredPokemonList && <PokemonList {...filteredPokemonList}/>}
-          <Grid>
-            {pokemonList.map((pkmn) => (
-              <GridCol key={pkmn.id} span={3} >
-                <Button fullWidth variant='filled' color='red' component={Link} to={`${pkmn.id}`}>{pkmn.name.toUpperCase()}</Button>
-              </GridCol>
-            ))}
-          
-            <Text>{individualPokemon?.name}</Text>
-            <Text>{individualPokemon?.abilities[0]?.ability.name}</Text>
-          </Grid>
+          <Container>
+            {filteredPokemonList && <PokemonList filteredPokemonList={filteredPokemonList}/>}
           </Container>
-      </>
+            
+          </Container>
+      </div>
     )
 }
 

@@ -1,26 +1,92 @@
-import { Button, Grid, GridCol, Text } from '@mantine/core';
-import React from 'react'
+import { BackgroundImage, Button, Grid, GridCol, Loader, Text } from '@mantine/core';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import { TPokemonListItem } from '../../contexts/pokemon.context';
 import { Link } from 'react-router-dom';
 
-const PokemonList = (filteredPokemonList: TPokemonListItem[]) => {
-    console.log(filteredPokemonList);
+import './pokemon-list.styles.scss';
+import { TIndividualPokemon } from '../../pages/Pokemon/Pokemon';
+
+type PokemonListProps = {
+  filteredPokemonList: TPokemonListItem[];
+};
+
+type TPokemonNameAndImg = {
+  name: string,
+  sprites: {
+    front_default: string,
+    back_default: string,
+  }
+}
+
+type TPokemonImageList = {
+  pokemonImageList: TPokemonNameAndImg[],
+}
+
+const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
+
+  const [imageList, setImageList] = useState<TPokemonNameAndImg[]>([]);
+  const [indPokemon, setIndPokemon] = useState<undefined|TPokemonNameAndImg>(undefined);
+
+  const addToImageHandler = (pokemonToAdd: TPokemonNameAndImg) => {
+    setImageList(
+      [
+        ...imageList,
+        pokemonToAdd
+      ]
+    )
+  }
+
+  
+
+  const getPokemonImageUrl = (pokemonName: string): string => {
+    const individualImageUrl =imageList.find(x => x.name == pokemonName)?.sprites.front_default;
+    return individualImageUrl!;
+  }
+  const style = () => ({});
+  const pokemonImageStyle = (imageUrl: string) => ({
+  backgroundImage: `url(${imageUrl})`
+});
+
+  useMemo(()=>{
+    const fetchCall = async () => {
+      const newList: TPokemonNameAndImg[] = [];
+      for (var i=1; i <= 151; i++) {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
+        const pokemon: {name: string, sprites: {front_default: string, back_default: string}} = await response.json();
+        newList.push(pokemon);
+      }
+      setImageList(newList);
+    }
+    fetchCall();
+  },[])
+  
+  const navigate = useNavigate();
+  const navigateHandler = (url: number) => {
+    navigate(url.toString());
+  }
+
+  if(!imageList) {
+    return <Loader />;
+  }
+  
+  console.log(indPokemon?.name, 'here is individual pkmn');
+  console.log(imageList, 'BLAAAAA img list');
 
   return (
     <div>
-        <button>hejsan</button>
-      
+      <Grid>
+        {filteredPokemonList.map((pkmn) => (
+          <GridCol key={pkmn.id} span={3} onClick={() => navigateHandler(pkmn.id)} >
+            <div className='BlackBorder BlueButton' style={pokemonImageStyle(getPokemonImageUrl(pkmn.name))}>
+              <Text fw={700} c='white' ta='center' tt='uppercase'>{pkmn.name}</Text>
+            </div>
+          </GridCol>
+        ))}
+      </Grid>
     </div>
   )
 }
-
-/*  <Grid>
-        {filteredPokemonList.map((pkmn) => (
-            <GridCol key={pkmn.id} span={3} >
-            <Button fullWidth variant='filled' color='red' component={Link} to={`${pkmn.id}`}>{pkmn.name.toUpperCase()}</Button>
-            </GridCol>
-        ))}
-    </Grid> */
 
 export default PokemonList;

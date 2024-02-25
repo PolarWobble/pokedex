@@ -7,11 +7,7 @@ import { Link } from 'react-router-dom';
 
 const PokemonCard = (pkmn: TPkmn) => {
   return (
-    <div>
-      <Text>BAKADBAS</Text>
-      <Text>{pkmn.name} is in pokemon-card</Text>
-      <Button component={Link} to='/'>Back to Home</Button>
-    </div>
+      <img src={`${pkmn?.sprites?.front_default}`} className='Pokemon-Image'/>
   )
 }
 
