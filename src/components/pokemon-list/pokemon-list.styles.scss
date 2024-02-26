@@ -13,15 +13,21 @@
     
 }
 
-.MainBG{
+.Search-Background{
     background-color: #FAF9F6;
-    
-    
+}
+
+.List-Loader{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .BlueButton{
     display: flex;
     flex-direction: column;
+    position: relative;
     height: 200px;
     background-color: rgb(42, 117, 187);
     background-size: cover;

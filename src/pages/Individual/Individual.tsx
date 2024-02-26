@@ -28,6 +28,7 @@ const Individual = () => {
   const [pkmn, setPkmn] = useState<undefined|TPkmn>(undefined);
   const [displayData, setDisplayData] = useState<string>('');
   const [movesArrayIndex, setMovesArrayIndex] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
 //const [searchString, setSearchString] = useState<undefined|string>('');
 
 
@@ -43,18 +44,23 @@ const Individual = () => {
 
   useEffect(
     () =>{
-    //setPkmn({name: 'loading', ...pkmn})
+      setDisplayData('-');
 
-    const fetchCall = async () => {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
-      const pokemon = await response.json();
-      console.log(pokemon);
-      setDisplayData(pokemon.name);
-      setMovesArrayIndex(0);
-      setPkmn(pokemon);
-    }
-    fetchCall();
-  },[id])
+      const fetchCall = async () => {
+        try {
+          const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+          const pokemon = await response.json();
+          console.log(pokemon);
+          setDisplayData(pokemon.name);
+          setMovesArrayIndex(0);
+          setPkmn(pokemon);
+        } finally {
+          setLoading(false);
+        }
+      };
+      setLoading(true);
+      fetchCall();
+    },[id])
 
   const movesArrayLoop = () => {
     
@@ -72,7 +78,7 @@ const Individual = () => {
     <div className='Pokedex-Body Main-Background'>
       <div className='Pokedex-Image-Container'>
         <>
-            {pkmn && <PokemonCard {...pkmn} />}
+            {loading ? (<Loader size='xl' className='Pokemon-Image-Loader'/>) : (pkmn && <PokemonCard {...pkmn} />)}
         </>
         <Text className='Pokemon-Data' tt='capitalize'>{displayData}</Text><Button variant='subtle' size='xs' className='Button-Previous' onClick={() => navigateHandlerPrevious(pkmn?.id!)}>{`<`}</Button>
         <Button variant='outline' size='xs' c='white' className='Button-Blue-1-2' onClick={() => displayDataHandler('Height: '+pkmn?.height!+'dm')}>&#8593;</Button>

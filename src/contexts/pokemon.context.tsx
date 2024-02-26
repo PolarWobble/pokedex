@@ -28,7 +28,6 @@ export const PokemonProvider = ({children}:TPokemonProvider) => {
         const fetchCall = async () => {
             const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=151');
             const pokemon: {results: {name: string}[]} = await response.json();
-            console.log(pokemon, ' in context here');
             setPokemonList(pokemon.results.map((pokemon, i) => ({name: pokemon.name, id: i+1})));
         }
         fetchCall();

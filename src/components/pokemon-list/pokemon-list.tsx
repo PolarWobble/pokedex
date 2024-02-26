@@ -28,6 +28,7 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
 
   const [imageList, setImageList] = useState<TPokemonNameAndImg[]>([]);
   const [indPokemon, setIndPokemon] = useState<undefined|TPokemonNameAndImg>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const addToImageHandler = (pokemonToAdd: TPokemonNameAndImg) => {
     setImageList(
@@ -51,14 +52,19 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
 
   useMemo(()=>{
     const fetchCall = async () => {
-      const newList: TPokemonNameAndImg[] = [];
-      for (var i=1; i <= 151; i++) {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
-        const pokemon: {name: string, sprites: {front_default: string, back_default: string}} = await response.json();
-        newList.push(pokemon);
-      }
-      setImageList(newList);
+      try{
+        const newList: TPokemonNameAndImg[] = [];
+        for (var i=1; i <= 151; i++) {
+          const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
+          const pokemon: {name: string, sprites: {front_default: string, back_default: string}} = await response.json();
+          newList.push(pokemon);
+        }
+        setImageList(newList);
+      } finally{
+          setLoading(false);
+        }
     }
+    setLoading(true);
     fetchCall();
   },[])
   
@@ -70,9 +76,6 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
   if(!imageList) {
     return <Loader />;
   }
-  
-  console.log(indPokemon?.name, 'here is individual pkmn');
-  console.log(imageList, 'BLAAAAA img list');
 
   return (
     <div>
@@ -80,7 +83,7 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
         {filteredPokemonList.map((pkmn) => (
           <GridCol key={pkmn.id} span={3} onClick={() => navigateHandler(pkmn.id)} >
             <div className='BlackBorder BlueButton' style={pokemonImageStyle(getPokemonImageUrl(pkmn.name))}>
-              <Text fw={700} c='white' ta='center' tt='uppercase'>{pkmn.name}</Text>
+              {loading ? <Loader className='List-Loader'/> : (<Text fw={700} c='white' ta='center' tt='uppercase'>{pkmn.name}</Text>)}
             </div>
           </GridCol>
         ))}
