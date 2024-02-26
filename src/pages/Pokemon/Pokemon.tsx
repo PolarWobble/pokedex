@@ -47,7 +47,7 @@ const Pokemon = () => {
     //<Text>{individualPokemon?.abilities[0]?.ability.name}</Text>
     return (
       <div className='Main-Background'>
-        <Container size='lg' bg='red' className='Dex-Container'>
+        <Container size='lg' bg='red' className='Dex-Container '>
           <Container p='1em' pb='1em' className='Search-Background BlackBorder'>
             <TextInput classNames={{ input: classes.textInput }} placeholder='Search Pokémon by name' value={stringValue} onChange={setStringValue} />
           </Container>
