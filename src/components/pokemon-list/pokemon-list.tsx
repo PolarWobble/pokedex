@@ -79,7 +79,7 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
 
   return (
     <div>
-      <Grid>
+      <Grid pt='50'>
         {filteredPokemonList.map((pkmn) => (
           <GridCol key={pkmn.id} span={3} onClick={() => navigateHandler(pkmn.id)} >
             <div className='BlackBorder BlueButton' style={pokemonImageStyle(getPokemonImageUrl(pkmn.name))}>
