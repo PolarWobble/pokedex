@@ -40,6 +40,7 @@ const Home = () => {
 
   return (
     <div className='Main-Background Home-Background'>
+      <img src='https://upload.wikimedia.org/wikipedia/commons/9/98/International_Pok%C3%A9mon_logo.svg' alt='pokemon-logo' className='Logo'/>
       <Button size="xl" color="rgba(42, 117, 187, 1)" component={Link} to='/pokemon'>To All Pokemon</Button>
     </div>
   )

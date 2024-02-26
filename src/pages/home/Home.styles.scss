@@ -1,5 +1,6 @@
 .Home-Background{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -11,3 +12,8 @@
     background-size: cover;
 }
 
+.Logo{
+    height: auto;
+    width: auto;
+    margin-bottom: 40px;
+}
