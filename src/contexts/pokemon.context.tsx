@@ -24,14 +24,14 @@ export const PokemonProvider = ({children}:TPokemonProvider) => {
     const [filteredPokemonList, setFilteredPokemonList] = useState<TPokemonListItem[]>([]);
 
     useEffect(
-        () =>{
-        const fetchCall = async () => {
+      () =>{
+          const fetchCall = async () => {
             const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=151');
             const pokemon: {results: {name: string}[]} = await response.json();
             setPokemonList(pokemon.results.map((pokemon, i) => ({name: pokemon.name, id: i+1})));
-        }
+          }
         fetchCall();
-    },[]);
+      },[]);
 
     const value = {pokemonList, setPokemonList, filteredPokemonList, setFilteredPokemonList};
 

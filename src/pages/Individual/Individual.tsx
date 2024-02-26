@@ -85,10 +85,11 @@ const Individual = () => {
         <Button variant='subtle' size='xs' className='Button-Previous' onClick={() => navigateHandlerPrevious(pkmn?.id!)}>{`<`}</Button>
         <Button variant='subtle' size='xs' className='Button-Next'onClick={() => navigateHandlerNext(pkmn?.id!)}>{`>`}</Button>
         <img src={pokedexPicture} alt="pokedex" className="pokedex" />
+        <div>
+          <Button variant='filled' color="rgba(42, 117, 187, 1)" component={Link} to='/pokemon'>All Pokemon</Button>
+        </div>
       </div>
-      <div>
-        <Button variant='filled' color="rgba(42, 117, 187, 1)" component={Link} to='/pokemon'>All Pokemon</Button>
-      </div>
+      
     </div>
   )
 }
