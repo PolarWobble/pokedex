@@ -79,7 +79,7 @@ const Individual = () => {
         <>
             {loading ? (<Loader size='xl' className='Pokemon-Image-Loader'/>) : (pkmn && <PokemonCard {...pkmn} />)}
         </>
-        <Text className='Pokemon-Data' tt='capitalize'>{displayData}</Text><Button variant='subtle' size='xs' className='Button-Previous' onClick={() => navigateHandlerPrevious(pkmn?.id!)}>{`<`}</Button>
+        <Text className='Pokemon-Data' tt='capitalize'>{displayData}</Text>
         <Button variant='outline' size='xs' c='white' className='Button-Blue-1-2' onClick={() => displayDataHandler('Height: '+pkmn?.height!+'dm')}>&#8593;</Button>
         <Button variant='outline' size='xs' c='white' className='Button-Blue-1-1' onClick={() => displayDataHandler((movesArrayIndex+1)+':'+pkmn?.moves[movesArrayIndex]?.move?.name!)}>!</Button>
         <Button variant='subtle' size='xs' className='Button-Previous' onClick={() => navigateHandlerPrevious(pkmn?.id!)}>{`<`}</Button>
