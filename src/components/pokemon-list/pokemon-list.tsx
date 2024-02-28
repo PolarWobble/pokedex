@@ -1,81 +1,145 @@
 import { BackgroundImage, Button, Grid, GridCol, Loader, Text } from '@mantine/core';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+import {useInView} from 'react-intersection-observer';
+import axios from 'axios';
 
-import { TPokemonListItem } from '../../contexts/pokemon.context';
+import { PokemonContext, TPokemonContext, TPokemonListItem, TPokemonNameAndImg } from '../../contexts/pokemon.context';
 import { Link } from 'react-router-dom';
 
 import './pokemon-list.styles.scss';
-import { TIndividualPokemon } from '../../pages/Pokemon/Pokemon';
 
 type PokemonListProps = {
-  filteredPokemonList: TPokemonListItem[];
+  filteredPokemonList: TPokemonNameAndImg[];
 };
 
-type TPokemonNameAndImg = {
-  name: string,
-  sprites: {
-    front_default: string,
-    back_default: string,
-  }
-}
 
-type TPokemonImageList = {
-  pokemonImageList: TPokemonNameAndImg[],
-}
+
 
 const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
-
-  const [imageList, setImageList] = useState<TPokemonNameAndImg[]>([]);
-  const [indPokemon, setIndPokemon] = useState<undefined|TPokemonNameAndImg>(undefined);
+  const {pokemonList} = useContext(PokemonContext) as TPokemonContext;
   const [loading, setLoading] = useState<boolean>(true);
 
-  const addToImageHandler = (pokemonToAdd: TPokemonNameAndImg) => {
-    setImageList(
-      [
-        ...imageList,
-        pokemonToAdd
-      ]
-    )
-  }
 
-  
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+  });
+
 
   const getPokemonImageUrl = (pokemonName: string): string => {
-    const individualImageUrl =imageList.find(x => x.name == pokemonName)?.sprites.front_default;
+    const individualImageUrl =filteredPokemonList.find(x => x.name == pokemonName)?.sprites.front_default;
     return individualImageUrl!;
   }
   const style = () => ({});
   const pokemonImageStyle = (imageUrl: string) => ({
-  backgroundImage: `url(${imageUrl})`
-});
+    backgroundImage: `url(${imageUrl})`
+  });
 
-  useMemo(()=>{
-    const fetchCall = async () => {
+
+  //? Sequential #2
+/*   useMemo(async () => {
+    const loadPokemonSequentially = async () => {
+      setLoading(true);
+      const sequentialRequest:TPokemonNameAndImg[] = [];
+
       try{
-        const newList: TPokemonNameAndImg[] = [];
-        for (var i=1; i <= 151; i++) {
-          const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
-          const pokemon: {name: string, sprites: {front_default: string, back_default: string}} = await response.json();
-          newList.push(pokemon);
+        for (var i=1; i <= 493; i++) {
+          sequentialRequest.push(
+          await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`).then((response) => response.data));
+          
+          setImageList(sequentialRequest);
+          console.log(sequentialRequest);  
         }
-        setImageList(newList);
-      } finally{
-          setLoading(false);
-        }
+      } catch(error) {
+        console.log('Error while fetching: ', error);
+      } finally {
+        setLoading(false);
+      }
     }
+
+  loadPokemonSequentially();
+  },[])  */
+
+
+
+
+  //? Sequential requests
+/*   useMemo(async () => {
+    const newList: TPokemonNameAndImg[] = [];
     setLoading(true);
-    fetchCall();
-  },[])
+    try{
+      for (var i=1; i <= 493; i++) {
+        await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`).then((response) => {
+          const pokemon: {name: string, sprites: {front_default: string, back_default: string}} = response.data;
+          newList.push(pokemon);
+          addToImageHandler(pokemon);
+          console.log(newList);
+        })
+      }
+    } finally{
+      setLoading(false);
+    }
+    
+    setImageList(newList);
+    
+  },[]) */
+
+  //?Concurrent requests
+
+  /* useMemo(async () => {
+    setLoading(true);
+    const newList: TPokemonNameAndImg[] = [];
+
+    try {
+      for (var i=1; i <= 50; i++) {
+        await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`).then((response) => {
+          const pokemon: {name: string, sprites: {front_default: string, back_default: string}} = response.data;
+          newList.push(pokemon);
+          
+          //addToImageHandler(pokemon);
+          console.log(newList);
+        })
+      }
+      setImageList(newList);
+      
+
+      const secondRequests = Array.from({length: (493-50)}, (_, i) => 
+        axios.get(`https://pokeapi.co/api/v2/pokemon/${i+51}`).then((response) => {
+          return response.data;
+        }));
+
+      const secondResponses: TPokemonNameAndImg[] = await Promise.all(secondRequests);
+
+      addArrayToImageList(secondResponses);
+      console.log(imageList);
+
+    } catch (error){
+      console.log('Error fetching Pokemon data:', error);
+    } finally{
+      setLoading(false);
+    }
+  },[]) */
+
+
+
+
+
+
+  /* useEffect(() => {
+    if (inView){
+      filteredPokemonList.forEach((pkmn) => {
+        lazyLoadImage(pkmn);
+      })
+    }
+  }) */
   
   const navigate = useNavigate();
   const navigateHandler = (url: number) => {
     navigate(url.toString());
   }
 
-  if(!imageList) {
-    return <Loader />;
-  }
+  //console.log(imageList);
+
 
   return (
     <div>
@@ -83,7 +147,13 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
         {filteredPokemonList.map((pkmn) => (
           <GridCol key={pkmn.id} span={3} onClick={() => navigateHandler(pkmn.id)} >
             <div className='BlackBorder BlueButton' style={pokemonImageStyle(getPokemonImageUrl(pkmn.name))}>
-              {loading ? <Loader className='List-Loader'/> : (<Text fw={700} c='white' ta='center' tt='uppercase'>{pkmn.name}</Text>)}
+              {
+                inView ?
+                  <Loader className='List-Loader'/> 
+                : (
+                  <Text fw={700} c='white' ta='center' tt='uppercase'>{pkmn.name}</Text>
+                  )
+              } 
             </div>
           </GridCol>
         ))}

@@ -19,25 +19,6 @@ export type TPkmn = {
 
 
 const Home = () => {
-  const [pkmn, setPkmn] = useState<undefined|TPkmn>(undefined);
-  //const [searchString, setSearchString] = useState<undefined|string>('');
-  
-
-  const id = 3;
-
-
-  useEffect(
-     () =>{
-    const fetchCall = async () => {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-      const pokemon = await response.json();
-      console.log(pokemon);
-      setPkmn(pokemon);
-    }
-    fetchCall();
-  },[])
-
-
   return (
     <div className='Main-Background Home-Background'>
       <img src='https://upload.wikimedia.org/wikipedia/commons/9/98/International_Pok%C3%A9mon_logo.svg' alt='pokemon-logo' className='Logo'/>

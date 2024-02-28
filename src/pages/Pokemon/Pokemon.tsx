@@ -16,7 +16,6 @@ export type TIndividualPokemon = {
       ability: {name: string,
                 url: string}
     }[]
-    //count: number,
   }
 
 
@@ -24,20 +23,15 @@ export type TIndividualPokemon = {
 const Pokemon = () => {
     const {pokemonList} = useContext(PokemonContext) as TPokemonContext;
     const {filteredPokemonList, setFilteredPokemonList} = useContext(PokemonContext) as TPokemonContext;
-
-    
     const [stringValue, setStringValue] = useInputState('');
     //const [filteredPokemonList, setFilteredPokemonList] = useState<undefined|TPokemonListItem[]>(pokemonList);
-
-
-    
 
 
   // setFilteredPokemonList(pokemon.results.map((pokemon, i) => ({name: pokemon.name, id: i+1})));
 
     useEffect(() => {
       const newFilteredPokemons = pokemonList.filter((pokemon) => {
-        return pokemon.name.toLowerCase().includes(stringValue) && pokemon;
+        return (pokemon.name.toLowerCase().includes(stringValue) || (pokemon.id.toString() == stringValue) && pokemon);
       });
       setFilteredPokemonList(newFilteredPokemons);
     }, [pokemonList, stringValue]
@@ -49,7 +43,7 @@ const Pokemon = () => {
       <div className='Main-Background'>
         <Container size='lg' bg='red' className='Dex-Container '>
           <Container p='1em' pb='1em' className='Search-Background BlackBorder'>
-            <TextInput classNames={{ input: classes.textInput }} placeholder='Search Pokémon by name' value={stringValue} onChange={setStringValue} />
+            <TextInput classNames={{ input: classes.textInput }} placeholder='Search Pokémon by name or #' value={stringValue} onChange={setStringValue} />
           </Container>
           <Container>
             {filteredPokemonList && <PokemonList filteredPokemonList={filteredPokemonList}/>}

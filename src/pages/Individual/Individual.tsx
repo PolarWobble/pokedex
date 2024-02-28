@@ -1,25 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Text, Loader } from '@mantine/core';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PokemonCard from '../../components/pokemon-card/pokemon-card.component';
+import { PokemonContext, TPokemonContext, TPokemonNameAndImg } from '../../contexts/pokemon.context';
+import axios from 'axios';
 
 import './individual.styles.scss';
 import pokedexPicture from '../../assets/pokedex_truepng_black.png';
 
 
 export type TPkmn = {
-    name: string,
-    id: number,
-    height: number,
-    moves: {
-      move: {name: string,
-                url: string}
-    }[],
-    sprites: {
-        front_default: string,
-        back_default: string
-    }
-  }
+  name: string,
+  id: number,
+  height: number,
+  moves: {
+    move: {
+      name: string,
+      url: string}
+  }[],
+  sprites: {
+      front_default: string,
+      back_default: string
+  },
+  types: {
+    type: {
+      name: string,
+      url: string}
+  }[]
+}
+  
 
 const Individual = () => {
 
@@ -41,6 +50,8 @@ const Individual = () => {
       navigate('/pokemon/'+(url-1).toString());
     }
   }
+
+  
 
   useEffect(
     () =>{
@@ -71,7 +82,7 @@ const Individual = () => {
     setDisplayData(arg.toString());
   }
   
-
+  console.log(pkmn?.types[0].type.name);
 
   return (
     <div className='Pokedex-Body Main-Background'>
