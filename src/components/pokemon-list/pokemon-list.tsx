@@ -14,8 +14,6 @@ type PokemonListProps = {
 };
 
 
-
-
 const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
   const {pokemonList} = useContext(PokemonContext) as TPokemonContext;
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,11 +23,6 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
     triggerOnce: true,
   });
 
-
-  const getPokemonImageUrl = (pokemonName: string): string => {
-    const individualImageUrl =filteredPokemonList.find(x => x.name == pokemonName)?.sprites.front_default;
-    return individualImageUrl!;
-  }
   const style = () => ({});
   const pokemonImageStyle = (imageUrl: string) => ({
     backgroundImage: `url(${imageUrl})`
@@ -146,15 +139,15 @@ const PokemonList: React.FC<PokemonListProps> = ({filteredPokemonList}) => {
       <Grid pt='50'>
         {filteredPokemonList.map((pkmn) => (
           <GridCol key={pkmn.id} span={3} onClick={() => navigateHandler(pkmn.id)} >
-            <div className='BlackBorder BlueButton' style={pokemonImageStyle(getPokemonImageUrl(pkmn.name))}>
-              {
-                inView ?
-                  <Loader className='List-Loader'/> 
-                : (
-                  <Text fw={700} c='white' ta='center' tt='uppercase'>{pkmn.name}</Text>
-                  )
-              } 
-            </div>
+            {
+              pkmn ? (
+              <div className='BlackBorder BlueButton' style={pokemonImageStyle(pkmn.sprites.front_default)}> 
+                <Text fw={700} c='white' ta='center' tt='uppercase'>{pkmn.name}</Text>
+              </div>
+              ) : (
+                <Loader className='BlueButton List-Loader'/> 
+              )
+            }
           </GridCol>
         ))}
       </Grid>

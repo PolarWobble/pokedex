@@ -59,15 +59,6 @@ export const PokemonProvider = ({children}:TPokemonProvider) => {
         const firstResponses: TPokemonNameAndImg[] = await Promise.all(firstRequests);
   
         setPokemonList(firstResponses);
-
-        //?Sequential
-        /* for (var i=1; i <= 50; i++) {
-          await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`).then((response) => {
-            const pokemon: TPokemonNameAndImg = response.data;
-            newList.push(pokemon);
-          })
-        }
-        setPokemonList(newList); */
         
   
         const secondRequests = Array.from({length: (493-50)}, (_, i) => 
@@ -88,7 +79,7 @@ export const PokemonProvider = ({children}:TPokemonProvider) => {
 
     const value = {pokemonList, setPokemonList, filteredPokemonList, setFilteredPokemonList};
     
-    console.log('POKEMON LIST end of context:',pokemonList);
+    //console.log('POKEMON LIST end of context:',pokemonList);
 
     return(
         <PokemonContext.Provider value={value}>{children}</PokemonContext.Provider>
